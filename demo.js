@@ -51,6 +51,7 @@ $(window).load(function(){
 		if(!isOrign){
 			$btnOrign.text('原图');
 			isOrign = true;
+			$box.css('cursor','move').on('mousedown',boxMove);
 		}
 		randomImg();
 
@@ -60,9 +61,11 @@ $(window).load(function(){
 			if(isOrign){
 				$this.text('返回');
 				setImgOrder(origArr);
+				$box.css('cursor','default').off('mousedown',boxMove);
 			}else{
 				$this.text('原图');
 				setImgOrder(randomArr);
+				$box.css('cursor','move').on('mousedown',boxMove);
 			}
 			isOrign = !isOrign;
 		}
@@ -162,15 +165,16 @@ $(window).load(function(){
 		}
 		if( isCorrect == true ){
 			$btnOrign.removeClass('on').off('click');
-			hasStart = false;
 			$box.css('cursor','default').off('mousedown');
+			hasStart = false;
 			//判断启动“下一关”功能
 			if (gameNum == gameNumMax-1) {
 				alert('恭喜你，已完成所有挑战！');
 			}else{
 				alert('太棒了！')
-				$btnNext.addClass('on').on('click',nextGame);
+				$btnNext.addClass('on').off('click',nextGame).on('click',nextGame);//避免多次绑定
 			}
+			
 		}
 	}
 
@@ -184,10 +188,8 @@ $(window).load(function(){
 		if (hasStart) {
 			hasStart = false;
 		}
-		if(!isOrign){
-			$btnOrign.text('原图');
-			$btnOrign.removeClass('on').off('click');
-			isOrign = true;
-		}
+		$btnOrign.text('原图');
+		$btnOrign.removeClass('on').off('click');
+		isOrign = true;
 	}
 })
